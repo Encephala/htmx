@@ -582,6 +582,21 @@ return (function () {
             return str.substring(str.length - suffix.length) === suffix
         }
 
+        function escapeSelector(selector) {
+            var special_chars = /[\/\[\].,:!]/;
+            var result = "";
+            if (selector === null) {
+                return null;
+            }
+            for (var i = 0; i < selector.length; i++) {
+                if (special_chars.test(selector[i])) {
+                    result += "\\";
+                }
+                result += selector[i];
+            }
+            return result;
+        }
+
         function normalizeSelector(selector) {
             var trimmedSelector = selector.trim();
             if (startsWith(trimmedSelector, "<") && endsWith(trimmedSelector, "/>")) {
@@ -777,7 +792,7 @@ return (function () {
          * @returns
          */
         function oobSwap(oobValue, oobElement, settleInfo) {
-            var selector = "#" + getRawAttribute(oobElement, "id");
+            var selector = "#" + escapeSelector(getRawAttribute(oobElement, "id"));
             var swapStyle = "outerHTML";
             if (oobValue === "true") {
                 // do nothing
